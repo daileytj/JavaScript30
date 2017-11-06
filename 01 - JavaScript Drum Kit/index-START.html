@@ -58,9 +58,26 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  function playSound(e){
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    if(!audio) return; //stops function from returning if there is no audio file for the corresponding data-key
+    audio.currentTime = 0; //this allows for multiple sounds to play at one time
+    audio.play();
+    key.classList.add('playing');
+    //use transition end event instead of setTimeout so that if the transition time from css animation changes there are no errors with overlapping timing
+  };
 
+  function removeTransition(e){
+    //this will refer to the key
+    if(e.propertyName !== 'transform') return; //skips if its not a tranform
+    this.classList.remove('playing');
+  }
+
+  const keys = document.querySelectorAll('.key');
+  //we cant just use key.addEventListener because you cannot listen to all items in an array at one time, you must explicitly loop over them
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+  window.addEventListener('keydown', playSound);
 </script>
-
-
 </body>
 </html>
