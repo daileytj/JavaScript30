@@ -9,6 +9,7 @@
 
   <div class="controls">
     <label for="spacing">Spacing:</label>
+    <!-- data- attribute created for setting a sizing attribute of px, you can create any attribute by prefixing it with data- -->
     <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
 
     <label for="blur">Blur:</label>
@@ -21,7 +22,29 @@
   <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
 
   <style>
-
+    
+    /*
+     CSS Variables and implementation
+    
+    :root sets the scope to be global
+    */
+    
+    :root{
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+    
+    img{
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+    
+    .hl{
+      color: var(--base);
+    }
+    
     /*
       misc styles, nothing to do with CSS variables
     */
@@ -48,6 +71,19 @@
   </style>
 
   <script>
+    const inputs = document.querySelectorAll('.controls input');
+    
+    // must use forEach method when using querySelectorAll because it creates a nodelist, not an array
+  
+    function handleUpdate(){
+      const suffix = this.dataset.sizing || '';
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+      
+    };
+    
+    inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+    
   </script>
 
 </body>
